@@ -64,14 +64,13 @@ function useNProgress() {
   }, []);
 
   useEffect(() => {
-    NProgress.start();
-    // switch (state) {
-    //   case "busy":
-    //     NProgress.start();
-    //     break;
-    //   default:
-    //     NProgress.done();
-    //     break;
-    // }
+    switch (state) {
+      case "busy":
+        NProgress.start();
+        break;
+      default:
+        NProgress.done();
+        break;
+    }
   }, [state]);
 }
