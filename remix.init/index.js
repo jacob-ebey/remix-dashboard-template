@@ -22,7 +22,7 @@ async function setup({ rootDirectory }) {
 	const wantsDB = await yesNoQuestion(
 		"Would you like a DB? (Y/n)",
 		true,
-		process.env.DB_PROVIDER
+		process.env.WANT_DB
 	);
 
 	let runMigrations;

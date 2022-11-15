@@ -17,7 +17,7 @@ jobs:
             migrate: "y"
           - want: "y"
             provider: prisma
-            db: postgresql
+            db: PostgreSQL
             migrate: "n"
             migrate_command: |
               npx prisma migrate dev --name init
@@ -31,6 +31,7 @@ jobs:
 
       - name: Remix Init
         env:
+          WANT_DB: ${{ matrix.db_config.want }}
           DB_PROVIDER: ${{ matrix.db_config.provider }}
           DB: ${{ matrix.db_config.db }}
           RUN_MIGRATIONS: ${{ matrix.db_config.migrate }}
