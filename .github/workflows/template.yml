@@ -32,7 +32,7 @@ jobs:
           DB: ${{ matrix.db_config.db }}
           RUN_MIGRATIONS: ${{ matrix.db_config.migrate }}
         run: |
-          npx create-remix@latest --install --typescript --template jacob-ebey/remix-dashboard-template ./
+          npx create-remix@latest --install --typescript --template https://github.com/jacob-ebey/remix-dashboard-template/tree/${{ github.sha }} ./
       
       - name: LS
         run: ls
