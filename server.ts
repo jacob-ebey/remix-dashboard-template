@@ -4,11 +4,20 @@ import compression from "compression";
 import { createRequestHandler } from "@remix-run/express";
 import { type AppLoadContext } from "@remix-run/server-runtime";
 
-import { MockAuthService } from "./services/auth";
-import { MockItemsService } from "./services/items";
+import { MockAuthService } from "./services/auth.mock";
+import { MockItemsService } from "./services/items.mock";
 
 if (!process.env.SESSION_SECRET) {
   throw new Error("Please define the SESSION_SECRET environment variable");
+}
+
+function getLoadContext(): AppLoadContext {
+  return {
+    services: {
+      auth: new MockAuthService([process.env.SESSION_SECRET!]),
+      items: new MockItemsService(),
+    },
+  };
 }
 
 const BUILD_DIR = path.join(process.cwd(), "build");
@@ -53,15 +62,6 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Express server listening on port ${port}`);
 });
-
-function getLoadContext(): AppLoadContext {
-  return {
-    services: {
-      auth: new MockAuthService([process.env.SESSION_SECRET!]),
-      items: new MockItemsService(),
-    },
-  };
-}
 
 function purgeRequireCache() {
   // purge require cache on requests for "server side HMR" this won't let
