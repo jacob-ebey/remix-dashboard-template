@@ -12,9 +12,17 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - uses: bahmutov/npm-install@v1
 
-      - uses: actions/cache@v3
+      - name: NPM Cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+      - name: NPM Install
+        run: npm ci
+
+      - name: Playwright Cache
+        uses: actions/cache@v3
         id: playwright-cache
         with:
           path: ~/.cache/ms-playwright
@@ -25,9 +33,6 @@ jobs:
       - name: Install Playwright Browsers (cached)
         run: npx playwright install-deps
         if: steps.playwright-cache.outputs.cache-hit == 'true'
-
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
 
       - name: Run Playwright tests
         run: npx playwright test
