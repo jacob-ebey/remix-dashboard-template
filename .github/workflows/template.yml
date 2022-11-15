@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         db_config:
-          - provider: false
+          - provider: "false"
           - provider: prisma
             db: sqlite
             migrate: "true"
