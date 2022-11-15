@@ -19,8 +19,7 @@ jobs:
             provider: prisma
             db: postgresql
             migrate: "n"
-            migrate_command: |
-              npx prisma migrate dev --name init
+
     steps:
       - uses: actions/checkout@v3
         with:
@@ -69,9 +68,9 @@ jobs:
         run: npx playwright install --with-deps
       
       - name: Migrate DB
-        if: ${{ matrix.db_config.migrate_command }}
+        if: ${{ matrix.db_config.migrate_command == "n" }}
         working-directory: ./template
-        run: ${{ matrix.db_config.migrate_command }}
+        run: npx prisma migrate dev --name init
 
       - name: Run Playwright tests
         working-directory: ./template
