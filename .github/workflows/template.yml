@@ -38,7 +38,7 @@ jobs:
           npx create-remix@latest --install --typescript --template ./repo ./template
       
       - name: List Files
-        run: ls
+        run: ls ./template
 
       - name: Setup docker compose
         if: ${{ matrix.db_config.migrate_command }}
