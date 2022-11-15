@@ -30,7 +30,7 @@ jobs:
           DB: ${{ matrix.db_config.db }}
           RUN_MIGRATIONS: ${{ matrix.db_config.migrate }}
         run: |
-          npx create-remix@latest --install --typescript --template jacob-ebey/remix-dashboard-template .
+          npx create-remix@latest --install --typescript --template jacob-ebey/remix-dashboard-template ./
       
       - name: Playwright Cache
         uses: actions/cache@v3
@@ -40,12 +40,11 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      - name: Check services healthiness
+      - name: Setup docker compose
         if: ${{ matrix.db_config.migrate_command }}
-        uses: thegabriele97/dockercompose-health-action@main
+        uses: yu-ichiro/spin-up-docker-compose-action@v1
         with:
-          timeout: '60'
-          workdir: '.'
+          file: docker-compose.yml
       
       - name: Migrate DB
         if: ${{ matrix.db_config.migrate_command }}
