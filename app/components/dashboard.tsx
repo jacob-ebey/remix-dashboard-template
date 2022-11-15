@@ -120,14 +120,14 @@ export function DashboardMenuHeader({
 		>
 			<Link
 				to={closeMenuTo}
-				role="button"
 				title="Close Menu"
 				className={cn(
 					"flex items-center justify-center p-2",
 					menuOpen ? "" : hiddenSooner ? "lg:hidden" : "md:hidden"
 				)}
 			>
-				❌
+				<span aria-hidden>❌</span>
+				<span className="sr-only">Close Menu</span>
 			</Link>
 
 			<h1 className="flex-1 py-4 text-lg ml-2">{label}</h1>
@@ -202,14 +202,14 @@ export function ListHeader({
 		<header className="relative flex items-center gap-2 px-2 border-b">
 			<Link
 				to={openMenuTo}
-				role="button"
 				title={"Open Menu"}
 				className={cn(
 					"flex items-center justify-center p-2",
 					hasDetailsSection ? "lg:hidden" : "md:hidden"
 				)}
 			>
-				➡️
+				<span aria-hidden>➡️</span>
+				<span className="sr-only">Open Menu</span>
 			</Link>
 
 			<h1 className="flex-1 py-4 text-lg ml-2">{label}</h1>
@@ -313,11 +313,11 @@ export function DetailsHeader({
 		<header className="relative flex items-center gap-2 px-2 border-b">
 			<Link
 				to=".."
-				role="button"
 				title={"Close Item"}
 				className={cn("flex items-center justify-center p-2", "md:hidden")}
 			>
-				❌
+				<span aria-hidden>❌</span>
+				<span className="sr-only">Close Menu</span>
 			</Link>
 
 			<h1 className="flex-1 py-4 text-lg ml-2">{label}</h1>
