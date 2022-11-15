@@ -39,7 +39,10 @@ async function setupPrisma({ dotenvExamplePath, rootDirectory }) {
 		"SQLite",
 		"PostgreSQL",
 	]);
-	const runMigrations = await yesNoQuestion("Run Migrations? (y/N)", false);
+	const runMigrations =
+		whatDB == "SQLite"
+			? await yesNoQuestion("Run Migrations? (Y/n)", true)
+			: false;
 
 	const installPrismaResult = childProcess.spawnSync(
 		"npm",
@@ -101,13 +104,18 @@ async function setupPrisma({ dotenvExamplePath, rootDirectory }) {
 			if (prismaResult.status !== 0) {
 				throw new Error("Failed to run Prisma Migrations");
 			}
+
+			console.log(`
+To get started locally, run the following command:
+  npm run dev
+`);
 		} else {
 			if (whatDB == "PostgreSQL") {
 				console.log(`
 To get started locally, run the following commands:
 
 start the local DB container:
-	docker-compose up -d
+  docker-compose up -d
 
 run the migrations:
   npx prisma migrate dev --name init
