@@ -17,7 +17,7 @@ jobs:
             migrate: "y"
           - want: "y"
             provider: prisma
-            db: PostgreSQL
+            db: postgresql
             migrate: "n"
             migrate_command: |
               npx prisma migrate dev --name init
@@ -28,6 +28,18 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        run: |
+          echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
+      - name: NPM Globals Cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Remix Init
         env:
@@ -68,6 +80,6 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: playwright-report
-          path: playwright-report/
+          name: playwright-report ${{ matrix.db_config.provider }} ${{ matrix.db_config.db }}
+          path: template/playwright-report/
           retention-days: 30
