@@ -35,8 +35,8 @@ jobs:
       - name: Setup docker compose
         if: ${{ matrix.db_config.migrate_command }}
         uses: isbang/compose-action@v1.4.0
-          with:
-            compose-file: "./docker-compose.yml"
+        with:
+          compose-file: "./docker-compose.yml"
 
       - name: Playwright Cache
         uses: actions/cache@v3
