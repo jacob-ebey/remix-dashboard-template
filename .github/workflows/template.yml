@@ -32,6 +32,12 @@ jobs:
         run: |
           npx create-remix@latest --install --typescript --template jacob-ebey/remix-dashboard-template ./
       
+      - name: Setup docker compose
+        if: ${{ matrix.db_config.migrate_command }}
+        uses: isbang/compose-action@v1.4.0
+          with:
+            compose-file: "./docker-compose.yml"
+
       - name: Playwright Cache
         uses: actions/cache@v3
         with:
@@ -39,12 +45,6 @@ jobs:
           key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-
-      - name: Setup docker compose
-        if: ${{ matrix.db_config.migrate_command }}
-        uses: yu-ichiro/spin-up-docker-compose-action@v1
-        with:
-          file: docker-compose.yml
       
       - name: Migrate DB
         if: ${{ matrix.db_config.migrate_command }}
