@@ -313,7 +313,7 @@ export function DetailsHeader({
 		<header className="relative flex items-center gap-2 px-2 border-b">
 			<Link
 				to=".."
-				title={"Close Item"}
+				title={"Close Menu"}
 				className={cn("flex items-center justify-center p-2", "md:hidden")}
 			>
 				<span aria-hidden>❌</span>
