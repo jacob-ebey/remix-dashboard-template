@@ -1,10 +1,10 @@
-name: Playwright Tests
+name: Template Tests
 on:
   pull_request: {}
   push:
     branches: [main]
 jobs:
-  test:
+  integration:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     matrix:
