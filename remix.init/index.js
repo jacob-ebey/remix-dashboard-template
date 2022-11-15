@@ -50,7 +50,7 @@ async function setup({ rootDirectory }) {
 
 async function setupPrisma({ dotenvExamplePath, rootDirectory }) {
 	const whatDB = await fromListQuestion(
-		"What DB Solution?",
+		"What DB?",
 		["SQLite", "PostgreSQL"],
 		process.env.DB
 	);
@@ -171,10 +171,8 @@ run the dev server:
  * @returns {boolean}
  */
 function yesNoQuestion(question, defaultAnswer, cliProvidedAnswer) {
-	if (cliProvidedAnswer === "0" || cliProvidedAnswer === "false")
-		return Promise.resolve(false);
-	if (!!cliProvidedAnswer)
-		return Promise.resolve(true);
+	if (cliProvidedAnswer === "n") return Promise.resolve(false);
+	if (cliProvidedAnswer === "y") return Promise.resolve(true);
 
 	return new Promise((resolve) => {
 		reader.question(`${question} `, (answer) => {

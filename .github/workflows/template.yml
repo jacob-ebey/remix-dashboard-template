@@ -10,13 +10,15 @@ jobs:
     strategy:
       matrix:
         db_config:
-          - provider: "false"
-          - provider: prisma
+          - want: "n"
+          - want: "y"
+            provider: prisma
             db: sqlite
-            migrate: "true"
-          - provider: prisma
+            migrate: "y"
+          - want: "y"
+            provider: prisma
             db: postgresql
-            migrate: "false"
+            migrate: "n"
             migrate_command: |
               npx prisma migrate dev --name init
     steps:
