@@ -44,9 +44,20 @@ async function setupPrisma({ dotenvExamplePath, rootDirectory }) {
 			? await yesNoQuestion("Run Migrations? (Y/n)", true)
 			: false;
 
-	const installPrismaResult = childProcess.spawnSync(
+	let installPrismaResult = childProcess.spawnSync(
 		"npm",
-		["i", "-D", "@prisma/client", "prisma"],
+		["i", "-D", "prisma"],
+		{
+			stdio: "inherit",
+			cwd: rootDirectory,
+		}
+	);
+	if (installPrismaResult.status !== 0) {
+		throw new Error("Failed to install Prisma");
+	}
+	installPrismaResult = childProcess.spawnSync(
+		"npm",
+		["i", "@prisma/client"],
 		{
 			stdio: "inherit",
 			cwd: rootDirectory,
