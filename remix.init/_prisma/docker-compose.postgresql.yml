@@ -1,0 +1,12 @@
+version: 3
+services:
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: johndoe
+      POSTGRES_PASSWORD: randompassword
+    volumes:
+      - postgres:/var/lib/postgresql/data
+volumes:
+  postgres:

@@ -79,6 +79,15 @@ async function setupPrisma({ dotenvExamplePath, rootDirectory }) {
 	const prismaServerPath = path.resolve(__dirname, "_prisma/server.ts");
 	fs.copyFileSync(prismaServerPath, serverPath);
 
+	if (whatDB == "PostgreSQL") {
+		const postgreSQLDockerComposePath = path.resolve(
+			__dirname,
+			"_prisma/docker-compose.postgresql.yml"
+		);
+		const dockerComposePath = path.resolve(rootDirectory, "docker-compose.yml");
+		fs.copyFileSync(postgreSQLDockerComposePath, dockerComposePath);
+	}
+
 	return () => {
 		if (runMigrations) {
 			const prismaResult = childProcess.spawnSync(
@@ -93,10 +102,30 @@ async function setupPrisma({ dotenvExamplePath, rootDirectory }) {
 				throw new Error("Failed to run Prisma Migrations");
 			}
 		} else {
-			console.log(`
-To run migrations, run the following command:
-  npx prisma migrate dev
-    `);
+			if (whatDB == "PostgreSQL") {
+				console.log(`
+To get started locally, run the following commands:
+
+start the local DB container:
+	docker-compose up -d
+
+run the migrations:
+  npx prisma migrate dev --name init
+
+run the dev server:
+  npm run dev
+`);
+			} else {
+				console.log(`
+To get started locally, run the following commands:
+
+run the migrations:
+  npx prisma migrate dev --name init
+
+run the dev server:
+  npm run dev
+`);
+			}
 		}
 	};
 }
