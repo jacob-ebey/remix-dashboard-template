@@ -27,7 +27,7 @@ export async function loader({
 }: LoaderArgs) {
 	const [item] = await Promise.all([
 		items.getItemById(params.itemId!),
-		auth.requireUserId(request),
+		auth.requireUser(request),
 	]);
 
 	if (!item) {
@@ -46,7 +46,7 @@ export async function action({
 }: ActionArgs) {
 	const [formData] = await Promise.all([
 		request.formData(),
-		auth.requireUserId(request),
+		auth.requireUser(request),
 	]);
 
 	switch (formData.get("intent")) {

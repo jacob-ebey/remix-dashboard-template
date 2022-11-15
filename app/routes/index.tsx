@@ -7,9 +7,9 @@ export async function loader({
 	},
 	request,
 }: LoaderArgs) {
-	const userId = await auth.getUserId(request);
+	const user = await auth.getUser(request);
 
-	return json({ loggedIn: !!userId });
+	return json({ loggedIn: !!user });
 }
 
 export default function Home() {

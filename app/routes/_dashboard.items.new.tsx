@@ -28,7 +28,7 @@ export async function loader({
 	},
 	request,
 }: LoaderArgs) {
-	await auth.requireUserId(request);
+	await auth.requireUser(request);
 	return null;
 }
 
@@ -40,7 +40,7 @@ export async function action({
 }: ActionArgs) {
 	const [formData] = await Promise.all([
 		request.formData(),
-		auth.requireUserId(request),
+		auth.requireUser(request),
 	]);
 	const parseResult = schema.safeParse(formData);
 

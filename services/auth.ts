@@ -3,10 +3,13 @@ import {
 	createCookieSessionStorage,
 	type SessionStorage,
 } from "@remix-run/node";
+import { Authenticator } from "remix-auth";
+import { FormStrategy } from "remix-auth-form";
 
-import { type AuthService } from "~/services";
+import { type AuthService, type User } from "~/services";
 
-export class MockAuthService implements AuthService {
+export class RemixAuthService implements AuthService {
+	public authenticator: Authenticator<User>;
 	private sessionStorage: SessionStorage;
 
 	constructor(secrets: string[]) {
@@ -19,19 +22,27 @@ export class MockAuthService implements AuthService {
 				secrets,
 			},
 		});
+
+		this.authenticator = new Authenticator<User>(this.sessionStorage);
+		this.authenticator.use(
+			new FormStrategy<User>(async ({ form, context }) => {
+				return { id: "1" };
+			}),
+			"mock"
+		);
 	}
 
-	async getUserId(request: Request) {
+	async getUser(request: Request) {
 		const cookie = request.headers.get("Cookie");
 		const session = await this.sessionStorage.getSession(cookie);
-
-		return session.get("userId") as string | undefined;
+		const user = await this.authenticator.isAuthenticated(session);
+		return user || undefined;
 	}
 
-	async requireUserId(request: Request) {
-		const userId = await this.getUserId(request);
+	async requireUser(request: Request) {
+		const user = await this.getUser(request);
 
-		if (!userId) {
+		if (!user) {
 			const url = new URL(request.url);
 			const redirectTo = url.pathname + url.search;
 
@@ -42,20 +53,10 @@ export class MockAuthService implements AuthService {
 			throw redirect(`/login?${searchParams.toString()}`);
 		}
 
-		return userId;
+		return user;
 	}
 
-	async setUserId(request: Request, userId: string) {
-		const cookie = request.headers.get("Cookie");
-		const session = await this.sessionStorage.getSession(cookie);
-		session.set("userId", userId);
-
-		return await this.sessionStorage.commitSession(session, {
-			secure: request.url.startsWith("https://"),
-		});
-	}
-
-	async clearSession(request: Request) {
+	async destroySession(request: Request) {
 		const cookie = request.headers.get("Cookie");
 		const session = await this.sessionStorage.getSession(cookie);
 

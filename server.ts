@@ -4,7 +4,7 @@ import compression from "compression";
 import { createRequestHandler } from "@remix-run/express";
 import { type AppLoadContext } from "@remix-run/server-runtime";
 
-import { MockAuthService } from "./services/auth.mock";
+import { RemixAuthService } from "./services/auth";
 import { MockItemsService } from "./services/items.mock";
 
 if (!process.env.SESSION_SECRET) {
@@ -14,7 +14,7 @@ if (!process.env.SESSION_SECRET) {
 function getLoadContext(): AppLoadContext {
 	return {
 		services: {
-			auth: new MockAuthService([process.env.SESSION_SECRET!]),
+			auth: new RemixAuthService([process.env.SESSION_SECRET!]),
 			items: new MockItemsService(),
 		},
 	};

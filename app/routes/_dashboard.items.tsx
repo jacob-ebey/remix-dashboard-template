@@ -21,7 +21,7 @@ export async function loader({
 }: LoaderArgs) {
 	const itemsPromise = items.getAllItems();
 
-	await auth.requireUserId(request);
+	await auth.requireUser(request);
 
 	return json({
 		items: await itemsPromise,

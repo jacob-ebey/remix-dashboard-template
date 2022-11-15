@@ -13,7 +13,7 @@ export async function loader({
 
 	return redirect(redirectTo, {
 		headers: {
-			"Set-Cookie": await auth.clearSession(request),
+			"Set-Cookie": await auth.destroySession(request),
 			"X-Remix-Revalidate": "1",
 		},
 	});
@@ -30,7 +30,7 @@ export async function action({
 
 	return redirect(redirectTo, {
 		headers: {
-			"Set-Cookie": await auth.clearSession(request),
+			"Set-Cookie": await auth.destroySession(request),
 		},
 	});
 }

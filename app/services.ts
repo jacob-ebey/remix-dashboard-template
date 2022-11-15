@@ -1,3 +1,5 @@
+import { type Authenticator } from "remix-auth";
+
 export interface Item {
 	id: string;
 	label: string;
@@ -10,9 +12,14 @@ export interface ItemsService {
 	deleteItemById(id: string): Promise<void>;
 }
 
+export interface User {
+	id: string;
+}
+
 export interface AuthService {
-	getUserId(request: Request): Promise<string | undefined>;
-	requireUserId(request: Request): Promise<string>;
-	setUserId(request: Request, userId: string): Promise<string>;
-	clearSession(request: Request): Promise<string>;
+	authenticator: Authenticator<User>;
+	getUser(request: Request): Promise<User | undefined>;
+	requireUser(request: Request): Promise<User>;
+	// setUser(request: Request, user: User): Promise<string>;
+	destroySession(request: Request): Promise<string>;
 }

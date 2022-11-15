@@ -1,4 +1,4 @@
-import { redirect, type LoaderArgs } from "@remix-run/node";
+import { type LoaderArgs } from "@remix-run/node";
 import { Form, Link, useSearchParams } from "@remix-run/react";
 
 import * as utils from "~/utils";
@@ -13,11 +13,11 @@ export async function action({
 	const url = new URL(request.url);
 	const redirectTo = utils.getRedirectTo(url.searchParams, "/");
 
-	return redirect(redirectTo, {
-		headers: {
-			"Set-Cookie": await auth.setUserId(request, "123"),
-		},
+	await auth.authenticator.authenticate("mock", request, {
+		successRedirect: redirectTo,
 	});
+
+	return null;
 }
 
 export default function Login() {

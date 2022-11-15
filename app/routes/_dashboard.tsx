@@ -20,7 +20,7 @@ export async function loader({
 	},
 	request,
 }: LoaderArgs) {
-	await auth.requireUserId(request);
+	await auth.requireUser(request);
 
 	return null;
 }
