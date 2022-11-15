@@ -22,6 +22,9 @@ jobs:
             migrate_command: |
               npx prisma migrate dev --name init
     steps:
+      - uses: actions/checkout@v3
+        with:
+          path: "repo"
       - uses: actions/setup-node@v3
         with:
           node-version: 18
@@ -32,10 +35,11 @@ jobs:
           DB: ${{ matrix.db_config.db }}
           RUN_MIGRATIONS: ${{ matrix.db_config.migrate }}
         run: |
-          npx create-remix@latest --install --typescript --template https://github.com/jacob-ebey/remix-dashboard-template/tree/${{ github.sha }} ./
+          npx create-remix@latest --install --typescript --template ./repo ./template
       
-      - name: LS
+      - name: List Files
         run: ls
+
       - name: Setup docker compose
         if: ${{ matrix.db_config.migrate_command }}
         uses: isbang/compose-action@v1.4.0
