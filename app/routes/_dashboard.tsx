@@ -1,8 +1,7 @@
-import { json, type LoaderArgs } from "@remix-run/node";
+import { type LoaderArgs } from "@remix-run/node";
 import {
   Form,
   Outlet,
-  useLoaderData,
   useLocation,
   type ShouldReloadFunction,
 } from "@remix-run/react";
@@ -14,7 +13,6 @@ import {
   ListItem,
   ListItems,
 } from "~/components/dashboard";
-import * as layout from "~/services/layout.server";
 
 export async function loader({
   context: {
@@ -22,13 +20,9 @@ export async function loader({
   },
   request,
 }: LoaderArgs) {
-  const pagesPromise = layout.getDashboardPages();
-
   await auth.requireUserId(request);
 
-  return json({
-    pages: await pagesPromise,
-  });
+  return null;
 }
 
 export const unstable_shouldReload: ShouldReloadFunction = ({ submission }) =>
@@ -38,7 +32,6 @@ export const unstable_shouldReload: ShouldReloadFunction = ({ submission }) =>
   );
 
 export default function DashboardLayout() {
-  const { pages } = useLoaderData<typeof loader>();
   const location = useLocation();
 
   const redirectTo = encodeURIComponent(location.pathname + location.search);
@@ -50,11 +43,7 @@ export default function DashboardLayout() {
           <DashboardMenuHeader label="Menu" menu="dashboard-menu" />
 
           <ListItems>
-            {pages.map(({ label, to }, index) => (
-              <ListItem key={"" + index + to + label} to={to}>
-                {label}
-              </ListItem>
-            ))}
+            <ListItem to="items">Items</ListItem>
           </ListItems>
 
           <hr />
