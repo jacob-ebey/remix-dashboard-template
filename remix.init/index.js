@@ -55,14 +55,10 @@ async function setupPrisma({ dotenvExamplePath, rootDirectory }) {
 	if (installPrismaResult.status !== 0) {
 		throw new Error("Failed to install Prisma");
 	}
-	installPrismaResult = childProcess.spawnSync(
-		"npm",
-		["i", "@prisma/client"],
-		{
-			stdio: "inherit",
-			cwd: rootDirectory,
-		}
-	);
+	installPrismaResult = childProcess.spawnSync("npm", ["i", "@prisma/client"], {
+		stdio: "inherit",
+		cwd: rootDirectory,
+	});
 	if (installPrismaResult.status !== 0) {
 		throw new Error("Failed to install Prisma");
 	}

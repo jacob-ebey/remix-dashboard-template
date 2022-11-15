@@ -1,69 +1,69 @@
 import { json, type LoaderArgs } from "@remix-run/node";
 import {
-  Outlet,
-  useLoaderData,
-  type ShouldReloadFunction,
+	Outlet,
+	useLoaderData,
+	type ShouldReloadFunction,
 } from "@remix-run/react";
 
 import {
-  useAutoFocusSection,
-  ListHeader,
-  ListItem,
-  ListItems,
-  ListSection,
+	useAutoFocusSection,
+	ListHeader,
+	ListItem,
+	ListItems,
+	ListSection,
 } from "~/components/dashboard";
 
 export async function loader({
-  context: {
-    services: { auth, items },
-  },
-  request,
+	context: {
+		services: { auth, items },
+	},
+	request,
 }: LoaderArgs) {
-  const itemsPromise = items.getAllItems();
+	const itemsPromise = items.getAllItems();
 
-  await auth.requireUserId(request);
+	await auth.requireUserId(request);
 
-  return json({
-    items: await itemsPromise,
-  });
+	return json({
+		items: await itemsPromise,
+	});
 }
 
 export const unstable_shouldReload: ShouldReloadFunction = ({ submission }) =>
-  !!submission &&
-  ["/login", "/logout", "/items"].some((pathname) =>
-    submission.action.startsWith(pathname)
-  );
+	!!submission &&
+	["/login", "/logout", "/items"].some((pathname) =>
+		submission.action.startsWith(pathname)
+	);
 
 export default function Items() {
-  useAutoFocusSection(/^\/items\/?$/i, "dashboard-items");
+	useAutoFocusSection(/^\/items\/?$/i, "dashboard-items");
 
-  const { items } = useLoaderData<typeof loader>();
+	const { items } = useLoaderData<typeof loader>();
 
-  return (
-    <>
-      <ListSection id="dashboard-items">
-        <ListHeader
-          label="Items"
-          menu="dashboard-menu"
-          actions={[
-            {
-              label: "New Item",
-              icon: "🆕",
-              to: "new",
-            },
-          ]}
-        />
+	return (
+		<>
+			<ListSection id="dashboard-items">
+				<ListHeader
+					label="Items"
+					menu="dashboard-menu"
+					actions={[
+						{
+							label: "New Item",
+							icon: "🆕",
+							to: "new",
+						},
+					]}
+				/>
 
-        <ListItems>
-          {items.map(({ id, label }) => (
-            <ListItem key={id} to={`item/${id}`}>
-              {label}
-            </ListItem>
-          ))}
-        </ListItems>
-      </ListSection>
+				<ListItems>
+					{items.map(({ id, label }) => (
+						<ListItem key={id} to={`item/${id}`}>
+							{label}
+						</ListItem>
+					))}
+				</ListItems>
+			</ListSection>
 
-      <Outlet />
-    </>
-  );
+			<Outlet />
+		</>
+	);
 }

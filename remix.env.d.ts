@@ -4,10 +4,10 @@
 import type { AuthService, ItemsService } from "./app/services";
 
 declare module "@remix-run/server-runtime" {
-  export interface AppLoadContext {
-    services: {
-      auth: AuthService;
-      items: ItemsService;
-    };
-  }
+	export interface AppLoadContext {
+		services: {
+			auth: AuthService;
+			items: ItemsService;
+		};
+	}
 }

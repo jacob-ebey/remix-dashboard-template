@@ -1,114 +1,114 @@
 import {
-  json,
-  redirect,
-  type ActionArgs,
-  type LoaderArgs,
+	json,
+	redirect,
+	type ActionArgs,
+	type LoaderArgs,
 } from "@remix-run/node";
 import {
-  Form,
-  useLoaderData,
-  useSearchParams,
-  type ShouldReloadFunction,
+	Form,
+	useLoaderData,
+	useSearchParams,
+	type ShouldReloadFunction,
 } from "@remix-run/react";
 
 import {
-  useAutoFocusSection,
-  ConfirmationDialog,
-  DetailsHeader,
-  DetailsSection,
+	useAutoFocusSection,
+	ConfirmationDialog,
+	DetailsHeader,
+	DetailsSection,
 } from "~/components/dashboard";
 
 export async function loader({
-  context: {
-    services: { auth, items },
-  },
-  params,
-  request,
+	context: {
+		services: { auth, items },
+	},
+	params,
+	request,
 }: LoaderArgs) {
-  const [item] = await Promise.all([
-    items.getItemById(params.itemId!),
-    auth.requireUserId(request),
-  ]);
+	const [item] = await Promise.all([
+		items.getItemById(params.itemId!),
+		auth.requireUserId(request),
+	]);
 
-  if (!item) {
-    throw json("Item not found", { status: 404 });
-  }
+	if (!item) {
+		throw json("Item not found", { status: 404 });
+	}
 
-  return json({ item });
+	return json({ item });
 }
 
 export async function action({
-  context: {
-    services: { auth, items },
-  },
-  params,
-  request,
+	context: {
+		services: { auth, items },
+	},
+	params,
+	request,
 }: ActionArgs) {
-  const [formData] = await Promise.all([
-    request.formData(),
-    auth.requireUserId(request),
-  ]);
+	const [formData] = await Promise.all([
+		request.formData(),
+		auth.requireUserId(request),
+	]);
 
-  switch (formData.get("intent")) {
-    case "delete":
-      await items.deleteItemById(params.itemId!);
-      return redirect("/items");
-    default:
-      return json(null, 400);
-  }
+	switch (formData.get("intent")) {
+		case "delete":
+			await items.deleteItemById(params.itemId!);
+			return redirect("/items");
+		default:
+			return json(null, 400);
+	}
 }
 
 export const unstable_shouldReload: ShouldReloadFunction = ({ submission }) =>
-  !!submission &&
-  ["/login", "/logout", "/items"].some((pathname) =>
-    submission.action.startsWith(pathname)
-  );
+	!!submission &&
+	["/login", "/logout", "/items"].some((pathname) =>
+		submission.action.startsWith(pathname)
+	);
 
 export default function Item() {
-  useAutoFocusSection(/^\/items\/./i, "dashboard-item");
+	useAutoFocusSection(/^\/items\/./i, "dashboard-item");
 
-  const { item } = useLoaderData<typeof loader>();
-  const [searchParams] = useSearchParams();
+	const { item } = useLoaderData<typeof loader>();
+	const [searchParams] = useSearchParams();
 
-  const confirmDelete = searchParams.has("delete");
+	const confirmDelete = searchParams.has("delete");
 
-  return (
-    <DetailsSection id="dashboard-item">
-      <DetailsHeader
-        label={item.label}
-        actions={[
-          {
-            label: "Delete Item",
-            icon: "🗑",
-            to: "?delete",
-          },
-        ]}
-      />
+	return (
+		<DetailsSection id="dashboard-item">
+			<DetailsHeader
+				label={item.label}
+				actions={[
+					{
+						label: "Delete Item",
+						icon: "🗑",
+						to: "?delete",
+					},
+				]}
+			/>
 
-      <div className="p-2">
-        <button
-          key={item.id}
-          autoFocus={!confirmDelete}
-          className="px-2 py-1 hover:outline"
-        >
-          Auto-focused
-        </button>
-      </div>
+			<div className="p-2">
+				<button
+					key={item.id}
+					autoFocus={!confirmDelete}
+					className="px-2 py-1 hover:outline"
+				>
+					Auto-focused
+				</button>
+			</div>
 
-      {confirmDelete && (
-        <>
-          <ConfirmationDialog
-            id="dashboard-item-delete-dialog"
-            title="Delete Item?"
-            confirmForm="dashboard-item-delete-form"
-            confirmLabel="Delete"
-            denyLabel="Cancel"
-          />
-          <Form method="post" id="dashboard-item-delete-form">
-            <input type="hidden" name="intent" value="delete" />
-          </Form>
-        </>
-      )}
-    </DetailsSection>
-  );
+			{confirmDelete && (
+				<>
+					<ConfirmationDialog
+						id="dashboard-item-delete-dialog"
+						title="Delete Item?"
+						confirmForm="dashboard-item-delete-form"
+						confirmLabel="Delete"
+						denyLabel="Cancel"
+					/>
+					<Form method="post" id="dashboard-item-delete-form">
+						<input type="hidden" name="intent" value="delete" />
+					</Form>
+				</>
+			)}
+		</DetailsSection>
+	);
 }

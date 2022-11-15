@@ -9,7 +9,8 @@
 		"dev:css": "npm run build:css -- --watch",
 		"dev:remix": "remix watch",
 		"start": "node --loader tsx ./server.ts",
-		"test": "playwright test --project=chromium"
+		"test": "playwright test --project=chromium",
+		"format": "prettier -w ."
 	},
 	"dependencies": {
 		"@remix-run/express": "*",
