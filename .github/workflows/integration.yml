@@ -1,11 +1,11 @@
-name: Playwright Tests
+name: Integration Tests
 on:
   pull_request: {}
   push:
     branches: [main]
 jobs:
-  test:
-    timeout-minutes: 60
+  integration:
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

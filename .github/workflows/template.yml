@@ -1,0 +1,84 @@
+name: Template Tests
+on:
+  pull_request: {}
+  push:
+    branches: [main]
+jobs:
+  integration:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        db_config:
+          - want: "n"
+          - want: "y"
+            provider: prisma
+            db: sqlite
+            migrate: "y"
+          - want: "y"
+            provider: prisma
+            db: postgresql
+            migrate: "n"
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: "repo"
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        run: |
+          echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
+      - name: NPM Globals Cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Remix Init
+        env:
+          WANT_DB: ${{ matrix.db_config.want }}
+          DB_PROVIDER: ${{ matrix.db_config.provider }}
+          DB: ${{ matrix.db_config.db }}
+          RUN_MIGRATIONS: ${{ matrix.db_config.migrate }}
+        run: |
+          npx create-remix@latest --install --typescript --template ./repo ./template
+      
+      - name: List Files
+        run: ls ./template
+
+      - name: Setup docker compose
+        if: ${{ matrix.db_config.migrate == 'n' }}
+        uses: isbang/compose-action@v1.4.0
+        with:
+          compose-file: "./template/docker-compose.yml"
+
+      - name: Playwright Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+      - name: Install Playwright Browsers
+        working-directory: ./template
+        run: npx playwright install --with-deps
+      
+      - name: Migrate DB
+        if: ${{ matrix.db_config.migrate == 'n' }}
+        working-directory: ./template
+        run: npx prisma migrate dev --name init
+
+      - name: Run Playwright tests
+        working-directory: ./template
+        run: npx playwright test
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report ${{ matrix.db_config.provider }} ${{ matrix.db_config.db }}
+          path: template/playwright-report/
+          retention-days: 30
