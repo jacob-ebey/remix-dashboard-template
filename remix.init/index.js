@@ -13,11 +13,25 @@ module.exports = setup;
 async function setup({ rootDirectory }) {
 	const dotenvExamplePath = path.join(rootDirectory, ".env.example");
 
-	const wantsDB = await yesNoQuestion("Would you like a DB? (Y/n)", true);
+	try {
+		fs.rmSync(path.resolve(rootDirectory, ".github/template.yml"), {
+			force: true,
+		});
+	} catch (e) {}
+
+	const wantsDB = await yesNoQuestion(
+		"Would you like a DB? (Y/n)",
+		true,
+		process.env.DB_PROVIDER
+	);
 
 	let runMigrations;
 	if (wantsDB) {
-		const whatDB = await fromListQuestion("What DB Solution?", ["Prisma"]);
+		const whatDB = await fromListQuestion(
+			"What DB Solution?",
+			["Prisma"],
+			process.env.DB_PROVIDER
+		);
 
 		switch (whatDB) {
 			case "Prisma":
@@ -35,13 +49,18 @@ async function setup({ rootDirectory }) {
 }
 
 async function setupPrisma({ dotenvExamplePath, rootDirectory }) {
-	const whatDB = await fromListQuestion("What DB Solution?", [
-		"SQLite",
-		"PostgreSQL",
-	]);
+	const whatDB = await fromListQuestion(
+		"What DB Solution?",
+		["SQLite", "PostgreSQL"],
+		process.env.DB
+	);
 	const runMigrations =
 		whatDB == "SQLite"
-			? await yesNoQuestion("Run Migrations? (Y/n)", true)
+			? await yesNoQuestion(
+					"Run Migrations? (Y/n)",
+					true,
+					process.env.RUN_MIGRATIONS
+			  )
 			: false;
 
 	let installPrismaResult = childProcess.spawnSync(
@@ -151,7 +170,12 @@ run the dev server:
  * @param {boolean} defaultAnswer
  * @returns {boolean}
  */
-function yesNoQuestion(question, defaultAnswer) {
+function yesNoQuestion(question, defaultAnswer, cliProvidedAnswer) {
+	if (cliProvidedAnswer == "0" || cliProvidedAnswer == "false")
+		return Promise.resolve(false);
+	if (cliProvidedAnswer == "1" || cliProvidedAnswer == "true")
+		return Promise.resolve(true);
+
 	return new Promise((resolve) => {
 		reader.question(`${question} `, (answer) => {
 			if (answer.trim() === "") {
@@ -172,7 +196,18 @@ function yesNoQuestion(question, defaultAnswer) {
  * @param {string[]} options
  * @returns {string}
  */
-function fromListQuestion(question, options) {
+function fromListQuestion(question, options, cliProvidedAnswer) {
+	if (!!cliProvidedAnswer) {
+		let found = options.find(
+			(o) => o.toLowerCase() === cliProvidedAnswer.toLowerCase()
+		);
+		if (!found)
+			throw new Error(
+				`Invalid answer provided for \`${question}\`: ${cliProvidedAnswer}`
+			);
+		return Promise.resolve(found);
+	}
+
 	return new Promise((resolve) => {
 		const q = `${question}\n${options
 			.map((o, i) => `${i + 1}. ${o}`)
