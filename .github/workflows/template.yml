@@ -14,6 +14,11 @@ jobs:
           - provider: prisma
             db: sqlite
             migrate: "true"
+          - provider: prisma
+            db: postgresql
+            migrate: "false"
+            migrate_command: |
+              npx prisma migrate dev --name init
     steps:
       - uses: actions/setup-node@v3
         with:
@@ -21,9 +26,9 @@ jobs:
 
       - name: Remix Init
         env:
-          DB_PROVIDER: ${{ MATRIX.db_config.provider }}
-          DB: ${{ MATRIX.db_config.db }}
-          RUN_MIGRATIONS: ${{ MATRIX.db_config.migrate }}
+          DB_PROVIDER: ${{ matrix.db_config.provider }}
+          DB: ${{ matrix.db_config.db }}
+          RUN_MIGRATIONS: ${{ matrix.db_config.migrate }}
         run: |
           npx create-remix@latest --install --typescript --template jacob-ebey/remix-dashboard-template .
       
@@ -34,6 +39,17 @@ jobs:
           key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
+
+      - name: Check services healthiness
+        if: ${{ matrix.db_config.migrate_command }}
+        uses: thegabriele97/dockercompose-health-action@main
+        with:
+          timeout: '60'
+          workdir: '.'
+      
+      - name: Migrate DB
+        if: ${{ matrix.db_config.migrate_command }}
+        run: ${{ matrix.db_config.migrate_command }}
 
       - name: Run Playwright tests
         run: npx playwright test
