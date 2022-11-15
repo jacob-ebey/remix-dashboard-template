@@ -53,7 +53,7 @@ jobs:
         run: ls ./template
 
       - name: Setup docker compose
-        if: ${{ matrix.db_config.migrate_command }}
+        if: ${{ matrix.db_config.migrate == 'n' }}
         uses: isbang/compose-action@v1.4.0
         with:
           compose-file: "./template/docker-compose.yml"
