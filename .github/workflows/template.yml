@@ -32,6 +32,8 @@ jobs:
         run: |
           npx create-remix@latest --install --typescript --template jacob-ebey/remix-dashboard-template ./
       
+      - name: LS
+        run: ls
       - name: Setup docker compose
         if: ${{ matrix.db_config.migrate_command }}
         uses: isbang/compose-action@v1.4.0
