@@ -369,16 +369,21 @@ export function ConfirmationDialog({
 }) {
 	const navigate = useNavigate();
 
+	useEffect(() => {
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (event.key == "Escape") {
+				navigate(".");
+			}
+		};
+		window.addEventListener("keydown", handleKeyDown);
+		return () => window.removeEventListener("keydown", handleKeyDown);
+	}, [navigate]);
+
 	return (
 		<dialog
 			id={id}
 			open
 			className="fixed inset-0 w-full h-full bg-[rgba(0,0,0,0.6)] text-black dark:text-white"
-			onKeyDown={(event) => {
-				if (event.key == "Escape") {
-					navigate(".");
-				}
-			}}
 		>
 			<div className="absolute inset-0 flex items-center justify-center">
 				<div className="bg-white dark:bg-black max-w-sm w-full border">
