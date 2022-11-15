@@ -44,7 +44,7 @@ jobs:
         if: ${{ matrix.db_config.migrate_command }}
         uses: isbang/compose-action@v1.4.0
         with:
-          compose-file: "./docker-compose.yml"
+          compose-file: "./template/docker-compose.yml"
 
       - name: Playwright Cache
         uses: actions/cache@v3
@@ -52,13 +52,16 @@ jobs:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
       - name: Install Playwright Browsers
+        working-directory: ./template
         run: npx playwright install --with-deps
       
       - name: Migrate DB
         if: ${{ matrix.db_config.migrate_command }}
+        working-directory: ./template
         run: ${{ matrix.db_config.migrate_command }}
 
       - name: Run Playwright tests
+        working-directory: ./template
         run: npx playwright test
 
       - uses: actions/upload-artifact@v3
