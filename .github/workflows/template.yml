@@ -68,7 +68,7 @@ jobs:
         run: npx playwright install --with-deps
       
       - name: Migrate DB
-        if: ${{ matrix.db_config.migrate_command == "n" }}
+        if: ${{ matrix.db_config.migrate_command == 'n' }}
         working-directory: ./template
         run: npx prisma migrate dev --name init
 
