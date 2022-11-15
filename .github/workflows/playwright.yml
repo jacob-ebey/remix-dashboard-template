@@ -13,17 +13,17 @@ jobs:
         with:
           node-version: 18
 
-      - name: NPM Globals
-        id: npm_globals
-        run: echo "path=$(npm root -g)" >> $GITHUB_OUTPUT
-
-      - name: NPM Cache
-        uses: actions/cache@v3
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        run: |
+          echo "::set-output name=dir::$(npm config get cache)"
+      - uses: actions/cache@v3
+        id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
         with:
-          path: |
-            node_modules
-            ${{ npm_globals.outputs.path }}
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: NPM Install
         run: npm ci
 
