@@ -5,7 +5,7 @@
 ## Getting Started with the template
 
 ```sh
-npx create-remix@latest --template jacob-ebey/remix-dashboard-template
+npx create-remix@latest --install --typescript --template jacob-ebey/remix-dashboard-template
 ```
 
 You will have the option of:
