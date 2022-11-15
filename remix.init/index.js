@@ -173,7 +173,7 @@ run the dev server:
 function yesNoQuestion(question, defaultAnswer, cliProvidedAnswer) {
 	if (cliProvidedAnswer == "0" || cliProvidedAnswer == "false")
 		return Promise.resolve(false);
-	if (cliProvidedAnswer == "1" || cliProvidedAnswer == "true")
+	if (!!cliProvidedAnswer)
 		return Promise.resolve(true);
 
 	return new Promise((resolve) => {
