@@ -136,7 +136,7 @@ const config: PlaywrightTestConfig = {
 		port: 3000,
 		env: {
 			SESSION_SECRET: "this-should-be-a-secret",
-			NODE_ENV: "test",
+			NODE_ENV: "integration",
 		},
 	},
 };
