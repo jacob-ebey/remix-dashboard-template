@@ -1,6 +1,5 @@
 {
-	"exclude": ["remix.init/_prisma"],
-	"include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx", "remix.init/index.js"],
+	"include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"],
 	"compilerOptions": {
 		"lib": ["DOM", "DOM.Iterable", "ES2019"],
 		"isolatedModules": true,

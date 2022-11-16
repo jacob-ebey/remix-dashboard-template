@@ -90,6 +90,10 @@ async function setupPrisma({ dotenvExamplePath, rootDirectory }) {
 		"\n" + fs.readFileSync(prismaDotenvExamplePath, "utf-8")
 	);
 
+	const tsconfigPath = path.resolve(rootDirectory, "tsconfig.json");
+	const templateTsconfigPath = path.resolve(__dirname, "tsconfig.json");
+	fs.copyFileSync(templateTsconfigPath, tsconfigPath);
+
 	const schemaPath = path.resolve(
 		__dirname,
 		`_prisma/schema.prisma.${whatDB.toLowerCase()}`
@@ -195,7 +199,7 @@ function yesNoQuestion(question, defaultAnswer, cliProvidedAnswer) {
  * @returns {string}
  */
 function fromListQuestion(question, options, cliProvidedAnswer) {
-	if (!!cliProvidedAnswer) {
+	if (cliProvidedAnswer) {
 		let found = options.find(
 			(o) => o.toLowerCase() === cliProvidedAnswer.toLowerCase()
 		);
