@@ -1,10 +1,12 @@
-name: Integration Tests
+name: Code Check
 on:
   pull_request: {}
   push:
     branches: [main]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
 jobs:
-  integration:
+  code-check:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
@@ -34,20 +36,8 @@ jobs:
       - name: NPM Install
         run: npm ci
 
-      - name: Playwright Cache
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+      - name: Prettier Check
+        run: npx prettier -c .
 
-      - name: Run Playwright tests
-        run: npx playwright test
-
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 30
+      - name: ESLint Check
+        run: npx eslint .
