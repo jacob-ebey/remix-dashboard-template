@@ -57,6 +57,10 @@ jobs:
       - name: Run Playwright tests
         run: npx playwright test
 
+      - name: CHMOD to make playwright deps cacheable
+        run: |
+          sudo chmod o+rw ~/.cache/ms-playwright-deps
+
       - uses: actions/upload-artifact@v3
         if: always()
         with:
