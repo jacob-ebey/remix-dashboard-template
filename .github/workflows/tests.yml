@@ -36,6 +36,11 @@ jobs:
       - name: NPM Install
         run: npm ci
 
+      - name: Playwright Deps Cache
+        uses: actions/cache@v3
+        with:
+          path: /var/cache/apt/archives
+          key: ${{ runner.os }}-playwright-deps-${{ hashFiles('**/package-lock.json') }}
       - name: Playwright Cache
         uses: actions/cache@v3
         with:
