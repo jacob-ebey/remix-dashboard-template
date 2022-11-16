@@ -59,7 +59,7 @@ jobs:
 
       - name: CHMOD to make playwright deps cacheable
         run: |
-          sudo chmod o+rw ~/.cache/ms-playwright-deps
+          sudo chmod -R 777 ~/.cache/ms-playwright-deps
 
       - uses: actions/upload-artifact@v3
         if: always()
