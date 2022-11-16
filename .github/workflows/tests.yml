@@ -48,8 +48,7 @@ jobs:
           key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
       - name: Make Playwright Install Faster
         run: |
-          sudo rm -rf /var/cache/apt/archives
-          sudo ln -s ~/.cache/ms-playwright-deps /var/cache/apt/archives
+          sudo rm -rf /var/cache/apt/archives && sudo ln -s ~/.cache/ms-playwright-deps /var/cache/apt/archives
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
