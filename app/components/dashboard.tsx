@@ -17,6 +17,7 @@ import {
 	type NavLinkProps,
 } from "@remix-run/react";
 import cn from "clsx";
+import { buttonStyles } from "./buttons";
 
 const FOCUSABLE_ELEMENTS_SELECTOR = `button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])`;
 
@@ -394,12 +395,12 @@ export function ConfirmationDialog({
 						<section className="flex justify-end gap-2 p-2">
 							<button
 								type="submit"
-								className="inline-block px-2 py-1 hover:outline"
+								className={buttonStyles()}
 								form={confirmForm}
 							>
 								{confirmLabel}
 							</button>
-							<Link to="." className="inline-block px-2 py-1 hover:outline">
+							<Link to="." className={buttonStyles()}>
 								{denyLabel}
 							</Link>
 						</section>

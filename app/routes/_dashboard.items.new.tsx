@@ -11,6 +11,7 @@ import {
 	DraftForm,
 	TextInput,
 } from "~/components/forms";
+import { buttonStyles } from "~/components/buttons";
 
 const restorableFields = ["label"];
 const schema = zfd.formData({
@@ -110,7 +111,7 @@ export default function NewItem() {
 					Label
 				</TextInput>
 
-				<button type="submit" className="block px-2 py-1 mt-4 hover:outline">
+				<button type="submit" className={buttonStyles()}>
 					Create
 				</button>
 			</DraftForm>

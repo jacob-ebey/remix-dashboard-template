@@ -11,7 +11,11 @@ import {
 	type ReactNode,
 } from "react";
 import { json } from "@remix-run/server-runtime";
-import { Form, type FormProps } from "@remix-run/react";
+import {
+	Form,
+	type FetcherWithComponents,
+	type FormProps,
+} from "@remix-run/react";
 import { type ZodError, type ZodFormattedError } from "zod";
 
 export function createErrorResponse(
@@ -58,9 +62,12 @@ function DraftFormImp(
 	{
 		onChange: _onChange,
 		errors,
+		fetcher,
 		restorable,
+		children,
 		...rest
 	}: FormProps & {
+		fetcher?: FetcherWithComponents<any>;
 		errors?: ZodFormattedError<any>;
 		restorable?: [string, string][];
 	},
@@ -120,7 +127,7 @@ function DraftFormImp(
 
 				// TODO: Try catch this and surface error message to user
 				localStorage.setItem(storageKey, JSON.stringify(toSave));
-			}, 500);
+			}, 200);
 		},
 		[ref, _onChange]
 	);
@@ -154,6 +161,8 @@ function DraftFormImp(
 		}
 	}, [ref]);
 
+	const FormComp = fetcher ? fetcher.Form : Form;
+
 	return (
 		<FormContext.Provider
 			value={{
@@ -161,7 +170,9 @@ function DraftFormImp(
 				restoredFormData,
 			}}
 		>
-			<Form {...rest} onChange={onChange} ref={refCallback} />
+			<FormComp {...rest} onChange={onChange} ref={refCallback}>
+				{children}
+			</FormComp>
 		</FormContext.Provider>
 	);
 }

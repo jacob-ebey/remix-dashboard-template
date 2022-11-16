@@ -5,6 +5,7 @@ import {
 	useLocation,
 	type ShouldReloadFunction,
 } from "@remix-run/react";
+import { buttonStyles } from "~/components/buttons";
 
 import {
 	Dashboard,
@@ -50,7 +51,12 @@ export default function DashboardLayout() {
 
 					<footer className="p-2 text-center">
 						<Form action={`/logout?redirectTo=${redirectTo}`} method="post">
-							<button className="block w-full text-center p-2 hover:outline">
+							<button
+								className={buttonStyles({
+									full: true,
+									uniform: true,
+								})}
+							>
 								Logout
 							</button>
 						</Form>

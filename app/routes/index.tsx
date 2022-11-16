@@ -1,5 +1,6 @@
 import { json, type LoaderArgs } from "@remix-run/node";
 import { Form, Link, useLoaderData } from "@remix-run/react";
+import { buttonStyles } from "~/components/buttons";
 
 export async function loader({
 	context: {
@@ -21,14 +22,12 @@ export default function Home() {
 			<p>A simple dashboard starter to get you up and running.</p>
 
 			{loggedIn ? (
-				<Link to="items" className="block text-center px-4 py-2 hover:outline">
+				<Link to="items" className={buttonStyles()}>
 					Dashboard
 				</Link>
 			) : (
 				<Form action={`/login?redirectTo=/`} method="post">
-					<button className="block text-center px-4 py-2 hover:outline">
-						Login with GitHub
-					</button>
+					<button className={buttonStyles()}>Login with GitHub</button>
 				</Form>
 			)}
 		</main>

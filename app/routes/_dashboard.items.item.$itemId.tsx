@@ -10,6 +10,7 @@ import {
 	useSearchParams,
 	type ShouldReloadFunction,
 } from "@remix-run/react";
+import { buttonStyles } from "~/components/buttons";
 
 import {
 	useAutoFocusSection,
@@ -89,7 +90,7 @@ export default function Item() {
 				<button
 					key={item.id}
 					autoFocus={!confirmDelete}
-					className="px-2 py-1 hover:outline"
+					className={buttonStyles()}
 				>
 					Auto-focused
 				</button>
