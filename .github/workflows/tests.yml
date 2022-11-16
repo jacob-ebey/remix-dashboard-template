@@ -49,7 +49,7 @@ jobs:
       - name: Make Playwright Install Faster
         run: |
           sudo rm -rf /var/cache/apt/archives
-          mkdir ~/.cache/ms-playwright-deps
+          mkdir -p ~/.cache/ms-playwright-deps
           sudo ln -s ~/.cache/ms-playwright-deps /var/cache/apt/archives
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
