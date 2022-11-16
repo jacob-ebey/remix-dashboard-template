@@ -23,6 +23,10 @@ jobs:
             migrate: "n"
 
     steps:
+      # For network flakiness. See https://github.com/vercel/next.js/pull/28264
+      - name: Tune linux network
+        run: sudo ethtool -K eth0 tx off rx off
+
       - uses: actions/checkout@v3
         with:
           path: "repo"
