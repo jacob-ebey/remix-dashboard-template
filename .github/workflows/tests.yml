@@ -23,14 +23,14 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ steps.npm-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
       - name: NPM Locals Cache
         uses: actions/cache@v3
         with:
           path: node_modules
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node_modules-
       - name: NPM Install
@@ -40,7 +40,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/ms-playwright-deps
-          key: ${{ runner.os }}-playwright-deps-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-playwright-deps-${{ hashFiles('package-lock.json') }}
       - name: Move Playwright Deps Install Location
         run: |
           sudo rm -rf /var/cache/apt/archives
@@ -50,7 +50,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
