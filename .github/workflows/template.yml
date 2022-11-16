@@ -48,7 +48,7 @@ jobs:
           RUN_MIGRATIONS: ${{ matrix.db_config.migrate }}
         run: |
           npx create-remix@latest --install --typescript --template ./repo ./template
-      
+
       - name: List Files
         run: ls ./template
 
@@ -66,7 +66,7 @@ jobs:
       - name: Install Playwright Browsers
         working-directory: ./template
         run: npx playwright install --with-deps
-      
+
       - name: Migrate DB
         if: ${{ matrix.db_config.migrate == 'n' }}
         working-directory: ./template
