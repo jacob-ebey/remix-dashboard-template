@@ -36,18 +36,6 @@ jobs:
       - name: NPM Install
         run: npm ci
 
-      - name: Playwright Deps Cache
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/ms-playwright-deps
-          key: ${{ runner.os }}-playwright-deps-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-playwright-deps-
-      - name: Move Playwright Deps Install Location
-        run: |
-          sudo rm -rf /var/cache/apt/archives
-          mkdir -p ~/.cache/ms-playwright-deps
-          sudo ln -s ~/.cache/ms-playwright-deps /var/cache/apt/archives
       - name: Playwright Cache
         uses: actions/cache@v3
         with:
@@ -58,10 +46,6 @@ jobs:
 
       - name: Run Playwright tests
         run: npx playwright test
-
-      - name: Make Playwright Deps Cacheable
-        run: |
-          sudo chmod -R 777 ~/.cache/ms-playwright-deps
 
       - uses: actions/upload-artifact@v3
         if: always()
