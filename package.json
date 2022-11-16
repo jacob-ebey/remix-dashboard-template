@@ -1,5 +1,6 @@
 {
 	"private": true,
+	"name": "remix-dashboard-template",
 	"sideEffects": false,
 	"scripts": {
 		"build": "npm run build:css && remix build",

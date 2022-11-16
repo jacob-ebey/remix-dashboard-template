@@ -1,8 +1,8 @@
-# Welcome to Remix!
+# remix-dashboard-template
 
-- [Remix Docs](https://remix.run/docs)
+A template to get you up and building a dashboard in Remix.
 
-## Getting Started with the template
+## Getting started with the template
 
 ```sh
 npx create-remix@latest --install --typescript --template jacob-ebey/remix-dashboard-template
@@ -15,6 +15,30 @@ You will have the option of:
 - Prisma with PostgreSQL
 
 ## Development
+
+### docker-compose
+
+If you have chosen to use PostgreSQL, a docker-compose.yml will have been created in the root of your project. You can start the database by running:
+
+```sh
+docker-compose up -d
+```
+
+You will have to run a migration against the DB if it's the first time running the project. See the below section on [Migrations](#migrations).
+
+```sh
+npx prisma migrate dev
+```
+
+### Migrations
+
+You can apply migrations to your development database by running:
+
+```sh
+npx prisma migrate dev
+```
+
+### Running the app
 
 Start the Remix development asset server and the Express server by running:
 
@@ -44,3 +68,8 @@ If you're familiar with deploying express applications you should be right at ho
 
 - `build/`
 - `public/build/`
+
+## Resources
+
+- [Remix Docs](https://remix.run/docs)
+- [Prisma Docs](https://www.prisma.io/docs/)
