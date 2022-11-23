@@ -14,9 +14,7 @@ async function setup({ rootDirectory }) {
 	const dotenvExamplePath = path.join(rootDirectory, ".env.example");
 
 	try {
-		fs.rmSync(path.resolve(rootDirectory, ".github/template.yml"), {
-			force: true,
-		});
+		fs.rmSync(path.resolve(rootDirectory, ".github/template.yml"));
 	} catch (e) {}
 
 	const wantsDB = await yesNoQuestion(
