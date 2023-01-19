@@ -4,6 +4,7 @@ import { authenticatedGoTo } from "./test-utils";
 
 test("can create and delete item", async ({ page }) => {
 	await authenticatedGoTo(page, "/items", "#dashboard-items");
+	await page.waitForSelector("#dashboard-items-list");
 
 	const newItemLink = await page.getByRole("link", { name: "New Item" });
 	await newItemLink.click();

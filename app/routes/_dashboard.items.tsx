@@ -21,9 +21,15 @@ export async function loader({
 	},
 	request,
 }: LoaderArgs) {
-	const itemsPromise = items.getAllItems();
+	let itemsPromise = items.getAllItems();
 
 	await auth.requireUser(request);
+
+	const url = new URL(request.url);
+	if (url.pathname.match(/^\/items\/?$/i)) {
+		// TODO: This is a bug in Remix, we shouldn't have to cast this.
+		itemsPromise = (await itemsPromise) as unknown as typeof itemsPromise;
+	}
 
 	return defer({
 		items: itemsPromise,
@@ -34,13 +40,16 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
 	defaultShouldRevalidate,
 	formAction,
 }) => {
-	return (
-		(!!formAction &&
-			["/login", "/logout", "/items"].some((pathname) =>
-				formAction.startsWith(pathname)
-			)) ||
-		defaultShouldRevalidate
-	);
+	if (
+		formAction &&
+		["/login", "/logout", "/items"].some((pathname) =>
+			formAction.startsWith(pathname)
+		)
+	) {
+		return true;
+	}
+
+	return false;
 };
 
 export default function Items() {
@@ -92,7 +101,7 @@ export default function Items() {
 					<Await
 						resolve={items}
 						children={(items) => (
-							<ListItems>
+							<ListItems id="dashboard-items-list">
 								{items.map(({ id, label }) => (
 									<ListItem key={id} to={`item/${id}`}>
 										{label}
