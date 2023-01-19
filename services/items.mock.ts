@@ -23,9 +23,11 @@ export class MockItemsService implements ItemsService {
 	}
 
 	async getAllItems() {
+		await new Promise((resolve) => setTimeout(resolve, 1000));
 		return global.__MOCK_ITEMS__;
 	}
 	async getItemById(id: string) {
+		await new Promise((resolve) => setTimeout(resolve, 200));
 		return global.__MOCK_ITEMS__.find((item) => item.id == id);
 	}
 	async createItem({ label }: { label: string }) {

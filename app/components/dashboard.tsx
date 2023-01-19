@@ -255,10 +255,18 @@ export function ListHeader({
 	);
 }
 
-export function ListItems({ children }: { children: ReactNode }) {
+export function ListItems({
+	id,
+	children,
+}: {
+	id: string;
+	children: ReactNode;
+}) {
 	return (
 		<div className="flex-1 overflow-y-auto p-2">
-			<ul className="flex flex-col gap-2">{children}</ul>
+			<ul id={id} className="flex flex-col gap-2">
+				{children}
+			</ul>
 		</div>
 	);
 }

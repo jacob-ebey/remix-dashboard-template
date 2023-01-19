@@ -8,7 +8,7 @@ import {
 	Form,
 	useLoaderData,
 	useSearchParams,
-	type ShouldReloadFunction,
+	type ShouldRevalidateFunction,
 } from "@remix-run/react";
 import { buttonStyles } from "~/components/buttons";
 
@@ -59,11 +59,22 @@ export async function action({
 	}
 }
 
-export const unstable_shouldReload: ShouldReloadFunction = ({ submission }) =>
-	!!submission &&
-	["/login", "/logout", "/items"].some((pathname) =>
-		submission.action.startsWith(pathname)
-	);
+export const shouldRevalidate: ShouldRevalidateFunction = ({
+	formAction,
+	currentParams,
+	nextParams,
+}) => {
+	if (
+		formAction &&
+		["/login", "/logout", "/items"].some((pathname) =>
+			formAction.startsWith(pathname)
+		)
+	) {
+		return true;
+	}
+
+	return currentParams.itemId !== nextParams.itemId;
+};
 
 export default function Item() {
 	useAutoFocusSection(/^\/items\/./i, "dashboard-item");

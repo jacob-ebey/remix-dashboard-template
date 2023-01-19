@@ -3,7 +3,7 @@ import {
 	Form,
 	Outlet,
 	useLocation,
-	type ShouldReloadFunction,
+	type ShouldRevalidateFunction,
 } from "@remix-run/react";
 import { buttonStyles } from "~/components/buttons";
 
@@ -26,11 +26,19 @@ export async function loader({
 	return null;
 }
 
-export const unstable_shouldReload: ShouldReloadFunction = ({ submission }) =>
-	!!submission &&
-	["/login", "/logout"].some((pathname) =>
-		submission.action.startsWith(pathname)
-	);
+export const shouldRevalidate: ShouldRevalidateFunction = ({
+	formAction,
+	defaultShouldRevalidate,
+}) => {
+	if (
+		formAction &&
+		["/login", "/logout"].some((pathname) => formAction.startsWith(pathname))
+	) {
+		return true;
+	}
+
+	return false;
+};
 
 export default function DashboardLayout() {
 	const location = useLocation();
